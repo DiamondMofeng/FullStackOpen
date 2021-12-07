@@ -1,0 +1,19 @@
+note over  browser
+type the New note and click the Save button.
+end note
+
+note over  browser
+a li element including the new note is appended to the Dom of current page locally.
+end note
+
+note over browser
+the new note is going to upload to the server then
+end note
+
+browser->server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server
+the new note is saved on the server 
+next time when browser visits this page, new note will be display
+(download from the server in data.json) 
+end note
