@@ -1,0 +1,29 @@
+title new note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note left of browser
+browser send a new note to server
+end note
+
+note over server
+server accepts new note,then appends it to the JSON file
+and redirect the browser to /notes page (reload current page).
+end note
+
+server-->browser: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+
+note over browser:
+browser starts executing js-code
+that requests the New notes JSON data from server
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{ content: "New note", date: "yymmdd" }, ...]
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note
