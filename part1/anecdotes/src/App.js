@@ -39,9 +39,9 @@ const App = () => {
   }
 
   const [top, setTop] = useState(0)
-  const changeTop=(selec)=>{
-    if(points[selec]>=points[top])
-    setTop(selec)
+  const changeTop=()=>{
+    if(points[selected]>=points[top])
+    setTop(selected)
     return
   }
 
