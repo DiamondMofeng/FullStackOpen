@@ -13,10 +13,7 @@ const App = () => {
       <Button text="neutral" var={neutral} func={setNeutral} />
       <Button text="bad" var={bad} func={setBad} />
       <Header title="statistics" />
-      <Sum text="good" var={good} />
-      <Sum text="neutral" var={neutral} />
-      <Sum text="bad" var={bad} />
-      <Statis good={good} neutral={neutral} bad={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
@@ -36,19 +33,26 @@ const Button = (props) => {
   )
 }
 
-const Sum = (props) => {
-  return (
-    <p>{props.text} {props.var}</p>
-  )
+const Statistics = ({ good, neutral, bad }) => {
+  if (good === 0 && neutral === 0 && bad === 0)
+    return(
+      <p>No feedback given</p>
+    )
+
+
+    return (
+      <div>
+        <StatisticLine text="good" value={good}/>
+        <StatisticLine text="neutral" value={neutral}/>
+        <StatisticLine text="bad" value={bad}/>
+        <StatisticLine text="average" value={(good - bad) / (good + neutral + bad)}/>
+        <StatisticLine text="positive" value={good / (good + neutral + bad)}/>
+      </div>
+    )
 }
 
-const Statis = ({good,neutral,bad}) => {
-  return (
-    <div>
-    <p>average {(good-bad)/(good+neutral+bad)}</p>
-    <p>positive {good/(good+neutral+bad)}</p>
-    </div>
-  )
+const StatisticLine = ({text,value})=>{
+  return <tr>{text} {value}</tr>
 }
 
 export default App
