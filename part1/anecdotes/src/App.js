@@ -34,7 +34,7 @@ const App = () => {
     console.log(copy)
     copy[selected] += 1
     setPoints(copy)
-    changeTop(selected)
+    changeTop()
     return
   }
 
