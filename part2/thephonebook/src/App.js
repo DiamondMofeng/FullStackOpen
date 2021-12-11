@@ -14,16 +14,26 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const newObject={
+    if (isPresent(newName, persons.map(p => p.name))) {
+      console.log(isPresent(newName, persons.map(p => p.name)))
+      window.alert(newName + " is already added to phonebook")
+      setNewName('')
+      return
+    }
+    //console.log(newName + " this name is passed")
+    const newObject = {
       name: newName
     }
 
     setPersons(persons.concat(newObject))
     setNewName('')
 
-    console.log(persons)
-
-
+  }
+  const isPresent = (ele, arr) => {
+    console.log("arr:", arr)
+    console.log(ele)
+    if (arr.indexOf(ele) !== -1) return true
+    return false
   }
   return (
     <div>
@@ -39,7 +49,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-        {persons.map(p=><p>{p.name}</p>)
+        {persons.map(p => <p>{p.name}</p>)
         }
       </div>
     </div>
