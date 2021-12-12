@@ -81,7 +81,7 @@ const CountryInfo = ({ country }) => {
         <ul>
           {
             console.log(languages)}
-          {languages.map(l => <li>{l}</li>)}
+          {languages.map(l => <li key={languages.indexOf(l)}>{l}</li>)}
         </ul>
       </div>
       <div>
@@ -100,20 +100,6 @@ const ShowInfoButton = ({ country }) => {
     setIsShow(!isShow)
   }
 
-  // if (isShow !== true) {
-  //   return (
-  //     <>
-  //       <button onClick={handelShowButton}>show</button>
-  //     </>
-  //   )
-  // }
-
-  // else return (
-  //   <>
-  //     <button onClick={handelShowButton}>show</button>
-  //     <CountryInfo country={country} />
-  //   </>
-  // )
   const infoToshow = isShow
     ? <CountryInfo country={country} />
     : <></>
@@ -126,7 +112,7 @@ const ShowInfoButton = ({ country }) => {
 }
 
 const WeatherInfo = ({ city }) => {
-  const [weatherInfo, setWeatherInfo] = useState({})
+  const [weatherInfo, setWeatherInfo] = useState('')
   const api_key = process.env.REACT_APP_API_KEY
   console.log(api_key)
   console.log(`http://api.openweathermap.org/data/2.5/find?q=${city}&appid=${api_key}`)
@@ -134,24 +120,23 @@ const WeatherInfo = ({ city }) => {
     axios
       .get(`http://api.openweathermap.org/data/2.5/find?q=${city}&appid=${api_key}`)
       .then(response => {
-        // console.log(response)
-        setWeatherInfo(response.data)
-        // console.log(weatherInfo)
-      })
+        setWeatherInfo(response.data.list[0])
+      }),[api_key, city]
   )
-  console.log(weatherInfo)
-  // const tempC = weatherInfo.main.temp - 273.15
-  // const windSpeed = weatherInfo.wind.speed
-  // const windDeg = weatherInfo.wind.deg
 
-  return (
-    <div>
-      <h2>Weather in {city}</h2>
-{/*       
-      <p><b>temperture: {weatherInfo.list[0].main.temp - 273.15} ℃</b></p>
-      <img loading="lazy" src={"123"} alt={"foo"} />
-      <p><b>wind: {weatherInfo.list[0].wind.speed}mph ,{weatherInfo.list[0].wind.deg} degree</b></p> */}
-    </div>
+  console.log(weatherInfo)
+  if (weatherInfo !== '') {
+    return (
+      <div>
+        <h2>Weather in {city}</h2>
+        <p><b>temperture: {Math.round(weatherInfo.main.temp - 273.15)} ℃</b></p>
+        <p><b>weather: {weatherInfo.weather[0].description}</b></p>
+        <p><b>wind: {weatherInfo.wind.speed}mph ,{weatherInfo.wind.deg} degree</b></p>
+      </div>
+    )
+  }
+  else return (
+    <></>
   )
 }
 export default App

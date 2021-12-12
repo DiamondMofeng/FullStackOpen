@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import services from './components/services'
 
 const App = () => {
+  console.log("app is rendering")
   const [persons, setPersons] = useState([
   ])
 
@@ -128,7 +129,7 @@ const DeleteButton = ({ id, name, persons, setPersons }) => {
       if (window.confirm("Delete " + name + " ?")) {
         services.deletePerson(id)
         // .then(response => console.log(response))
-        const toDelete=[...persons]
+        const toDelete = [...persons]
         setPersons(toDelete.splice(id, 1))
 
       }
