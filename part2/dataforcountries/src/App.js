@@ -22,12 +22,12 @@ const App = () => {
   return (
     <div>
       <p>find countries   <input value={filter} onChange={handleFilterChange} /></p>
-      <CountryInfo countries={countries} filter={filter} />
+      <CountryList countries={countries} filter={filter} />
     </div>
   )
 }
 
-const CountryInfo = ({ countries, filter }) => {
+const CountryList = ({ countries, filter }) => {
 
   const countriesToShow = countries.filter(c => c.name.common.toLowerCase().match(filter.toLowerCase()))
   if (filter === '')
@@ -43,44 +43,79 @@ const CountryInfo = ({ countries, filter }) => {
 
   else if (countriesToShow.length > 1 && countriesToShow.length < 10) {
     return (
-      countriesToShow.map(c => <p>{c.name.common}</p>)
+      countriesToShow.map(c => <p>{c.name.common}<ShowInfoButton country={c}/></p>)
     )
 
   }
   else if (countriesToShow.length === 1) {
-    console.log(countriesToShow[0])
-    console.log(Object.entries(countriesToShow[0].languages))
-    const languages = []
-    for (const [key, value] of Object.entries(countriesToShow[0].languages)) {
-      languages.push(value)
-      console.log(languages)
-    }
+
     return (
-      <div>
-        <h1>{countriesToShow[0].name.common}</h1>
-        <p>capital {countriesToShow[0].capital}</p>
-        <p>population {countriesToShow[0].population}</p>
-        <div>
-          <h2>languages</h2>
-          <ul>
-            {
-              console.log(languages)}
-            {languages.map(l => <li>{l}</li>)}
-          </ul>
-        </div>
-        <div>
-          <img loading="lazy" src={countriesToShow[0].flags.png} alt={countriesToShow[0].name.common} />
-          {/* <p>{countriesToShow[0].flags}</p> */}
-        </div>
-      </div>
+      <CountryInfo country={countriesToShow[0]} />
     )
   }
 
   return (
     <div>
-
+      No results
     </div>
   )
 }
+
+
+const CountryInfo = ({ country }) => {
+
+  const languages = []
+  for (const [, value] of Object.entries(country.languages)) {
+    languages.push(value)
+    console.log(languages)
+  }
+  return (
+    <div>
+      <h1>{country.name.common}</h1>
+      <p>capital {country.capital}</p>
+      <p>population {country.population}</p>
+      <div>
+        <h2>languages</h2>
+        <ul>
+          {
+            console.log(languages)}
+          {languages.map(l => <li>{l}</li>)}
+        </ul>
+      </div>
+      <div>
+        <img loading="lazy" src={country.flags.png} alt={country.name.common} />
+      </div>
+      <div>
+        {/* <h2>Weather in {country.capital}</h2> */}
+
+      </div>
+    </div>
+  )
+}
+
+
+const ShowInfoButton = ({ country }) => {
+  const [isShow, setIsShow] = useState(false)
+
+  const handelShowButton = () => {
+    setIsShow(!isShow)
+  }
+
+  if (isShow !== true) {
+    return (
+      <>
+        <button onClick={handelShowButton}>show</button>
+      </>
+    )
+  }
+
+  else return (
+    <>
+      <button onClick={handelShowButton}>show</button>
+      <CountryInfo country={country} />
+    </>
+  )
+}
+
 
 export default App
