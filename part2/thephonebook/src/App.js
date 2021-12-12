@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+//import axios from 'axios'
+import services from './components/services'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -11,14 +12,10 @@ const App = () => {
   // { name: 'Mary Poppendieck', number: '39-23-6423122', id: 3 }
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
+    services.getAll()
+      .then(data => setPersons(data))
   }, [])
+
   console.log('render', persons.length, 'persons')
   const [filter, setFilter] = useState('')
 
@@ -29,7 +26,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm persons={persons} setPersons={setPersons} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} setPersons={setPersons} />
     </div>
   )
 }
@@ -71,19 +68,18 @@ const PersonForm = ({ persons, setPersons }) => {
     const newObject = {
       name: newName,
       number: newNumber,
-      id: persons.length
+      //id: persons.length
     }
 
-    axios
-      .post('http://localhost:3001/persons', newObject)
-      .then(response => {
-        //console.log(response)
-        setPersons(persons.concat(response))
+    services.create(newObject)
+      .then(data => {
+        setPersons(persons.concat(data))
         setNewName('')
         setNewNumber('')
       })
 
-    console.log(persons)
+
+    //console.log(persons)
   }
 
   const isPresent = (ele, arr) => {
@@ -105,7 +101,7 @@ const PersonForm = ({ persons, setPersons }) => {
     </form>
   )
 }
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, setPersons }) => {
 
   const personsToShow = (filter === '')
     ? persons
@@ -113,10 +109,40 @@ const Persons = ({ persons, filter }) => {
 
   return (
     <div>
-      {personsToShow.map(p => <p key={p.id}>{p.name} {p.number}</p>)
+      {personsToShow.map(p =>
+        <p key={p.id}>
+          {p.name} {p.number}
+          <DeleteButton id={p.id} name={p.name} persons={persons} setPersons={setPersons} />
+        </p>)
       }
     </div>
   )
 }
+
+const DeleteButton = ({ id, name, persons, setPersons }) => {
+
+  const handleDeleteButton = (id, name, persons, setPersons) => {
+    console.log(id, name)
+    const handler = () => {
+
+      if (window.confirm("Delete " + name + " ?")) {
+        services.deletePerson(id)
+        // .then(response => console.log(response))
+        const toDelete=[...persons]
+        setPersons(toDelete.splice(id, 1))
+
+      }
+    }
+
+    return handler
+  }
+  return (
+    <>
+      <button onClick={handleDeleteButton(id, name, persons, setPersons)}>delete</button>
+    </>
+  )
+}
+
+
 
 export default App
