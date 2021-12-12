@@ -74,9 +74,14 @@ const PersonForm = ({ persons, setPersons }) => {
       id: persons.length
     }
 
-    setPersons(persons.concat(newObject))
-    setNewName('')
-    setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', newObject)
+      .then(response => {
+        //console.log(response)
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
+      })
 
     console.log(persons)
   }
@@ -108,7 +113,7 @@ const Persons = ({ persons, filter }) => {
 
   return (
     <div>
-      {personsToShow.map(p => <p key={personsToShow.id}>{p.name} {p.number}</p>)
+      {personsToShow.map(p => <p key={p.id}>{p.name} {p.number}</p>)
       }
     </div>
   )
