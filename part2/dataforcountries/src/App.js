@@ -43,7 +43,7 @@ const CountryList = ({ countries, filter }) => {
 
   else if (countriesToShow.length > 1 && countriesToShow.length < 10) {
     return (
-      countriesToShow.map(c => <p>{c.name.common}<ShowInfoButton country={c}/></p>)
+      countriesToShow.map(c => <p>{c.name.common}<ShowInfoButton country={c} /></p>)
     )
 
   }
@@ -86,7 +86,12 @@ const CountryInfo = ({ country }) => {
         <img loading="lazy" src={country.flags.png} alt={country.name.common} />
       </div>
       <div>
-        {/* <h2>Weather in {country.capital}</h2> */}
+        <h2>Weather in {country.capital}</h2>
+        <p><b>temperture: { }</b></p>
+        <img loading="lazy" src={"123"} alt={"foo"} />
+        <p><b>wind: { }</b></p>
+
+
 
       </div>
     </div>
