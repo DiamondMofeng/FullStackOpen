@@ -4,9 +4,10 @@ import services from './components/services'
 
 const App = () => {
   console.log("app is rendering")
-  const [persons, setPersons] = useState([
-  ])
-
+  const [persons, setPersons] = useState([])
+  const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState('normal')
   // { name: 'Arto Hellas', number: '040-123456', id: 0 },
   // { name: 'Ada Lovelace', number: '39-44-5323523', id: 1 },
   // { name: 'Dan Abramov', number: '12-43-234345', id: 2 },
@@ -20,16 +21,17 @@ const App = () => {
 
   console.log('render', persons.length, 'persons')
   console.log(persons)
-  const [filter, setFilter] = useState('')
+
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} type={messageType} />
       <Filter filter={filter} setFilter={setFilter} />
       <h2>add a new</h2>
-      <PersonForm persons={persons} setPersons={setPersons} />
+      <PersonForm persons={persons} setPersons={setPersons} setMessage={setMessage} setMessageType={setMessageType} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} setPersons={setPersons} />
+      <Persons persons={persons} filter={filter} setPersons={setPersons} setMessage={setMessage} setMessageType={setMessageType} />
     </div>
 
   )
@@ -48,7 +50,7 @@ const Filter = ({ filter, setFilter }) => {
   )
 }
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ persons, setPersons, setMessage, setMessageType }) => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
@@ -73,11 +75,29 @@ const PersonForm = ({ persons, setPersons }) => {
       if (window.confirm(newName + " is already added to phonebook. Would you like to replace the old number?")) {
         services
           .update(idOfToChange, changedPerson)
-          .then(r =>
-            setPersons(
-              persons.map(p => (p.id === idOfToChange)
-                ? changedPerson
-                : p)))
+          .then(r => {
+
+            setPersons(persons.map(p => (p.id !== idOfToChange)
+              ? p
+              : changedPerson))
+            setMessage(`${newName} 's number is updated`)
+            setMessageType('normal')
+            setTimeout(() => {
+              setMessage(null)
+              setMessageType('normal')
+            }, 3000)
+          })
+          .catch(error => {
+            setMessage(`Person '${newName}' was already removed from server`)
+            setMessageType('error')
+            setPersons(persons.filter((p => p.id !== idOfToChange)))
+            setTimeout(() => {
+              setMessage(null)
+              setMessageType('normal')
+            }, 3000)
+          }
+          )
+
 
         // console.log(r.data)})
 
@@ -98,6 +118,12 @@ const PersonForm = ({ persons, setPersons }) => {
         setPersons(persons.concat(data))
         setNewName('')
         setNewNumber('')
+        setMessage(`${newName} is added`)
+        setMessageType('normal')
+        setTimeout(() => {
+          setMessage(null)
+          setMessageType('normal')
+        }, 3000)
       })
 
 
@@ -123,7 +149,7 @@ const PersonForm = ({ persons, setPersons }) => {
     </form>
   )
 }
-const Persons = ({ persons, filter, setPersons }) => {
+const Persons = ({ persons, filter, setPersons, setMessage, setMessageType }) => {
 
   const personsToShow = (filter === '')
     ? persons
@@ -134,26 +160,50 @@ const Persons = ({ persons, filter, setPersons }) => {
       {personsToShow.map(p =>
         <p key={p.id}>
           {p.name} {p.number}
-          <DeleteButton id={p.id} name={p.name} persons={persons} setPersons={setPersons} />
+          <DeleteButton id={p.id} name={p.name} persons={persons} setPersons={setPersons} setMessage={setMessage} setMessageType={setMessageType} />
         </p>)
       }
     </div>
   )
 }
 
-const DeleteButton = ({ id, name, persons, setPersons }) => {
+const DeleteButton = ({ id, name, persons, setPersons, setMessage, setMessageType }) => {
 
-  const handleDeleteButton = (id, name, persons, setPersons) => {
+  const handleDeleteButton = (id, name, persons, setPersons, setMessage, setMessageType) => {
     console.log(id, name)
     const handler = () => {
 
       if (window.confirm("Delete " + name + " ?")) {
-        services.deletePerson(id)
+        services
+          .deletePerson(id)
+          .then(() => {
+            setPersons(persons.filter(p => p.id !== id))
+            console.log(persons)
+
+            setMessage(`${name} is removed`)
+            setMessageType('normal')
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+          })
+          .catch(() => {
+            setPersons(persons.filter(p => p.id !== id))
+            setMessage(`Failed to remove ${name} from server but locally. 
+            It might have been removed from the server.`)
+            setMessageType('error')
+            setTimeout(() => {
+              setMessage(null)
+              setMessageType('normal')
+            }, 3000)
+          })
+
         // .then(response => console.log(response))
-        const toDelete = [...persons]
-        setPersons(toDelete.splice(id, 1))
-        console.log(toDelete)
-        console.log(persons)
+        //failed try
+        // const toDelete = [...persons]
+        // setPersons(toDelete.splice(id, 1))
+        // console.log(toDelete)
+        // console.log(persons)
+
 
 
       }
@@ -163,11 +213,43 @@ const DeleteButton = ({ id, name, persons, setPersons }) => {
   }
   return (
     <>
-      <button onClick={handleDeleteButton(id, name, persons, setPersons)}>delete</button>
+      <button onClick={handleDeleteButton(id, name, persons, setPersons, setMessage, setMessageType)}>delete</button>
     </>
   )
 }
 
+
+const Notification = ({ message, type }) => {
+  //type:normal / error
+  const style_normalMsg = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  const style_errorMsg = { ...style_normalMsg, color: 'red' }
+
+  if (message) {
+    if (type === 'error') {
+      return (
+        <div style={style_errorMsg}>
+          <p>{message}</p>
+        </div>
+      )
+    }
+    else return (
+      <div style={style_normalMsg}>
+        <p>{message}</p>
+      </div>
+    )
+
+  }
+  else return null
+}
 
 
 export default App
