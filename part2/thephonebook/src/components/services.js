@@ -15,7 +15,9 @@ const create = newObject => {
 }
 
 const update = (id, newObject) => {
-    return axios.put(`${baseUrl}/${id}`, newObject)
+    return axios
+        .put(`${baseUrl}/${id}`, newObject)
+        .then(response=>response.data)
 }
 
 const deletePerson = (id) => {
@@ -24,6 +26,7 @@ const deletePerson = (id) => {
 
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
     getAll,
     create,

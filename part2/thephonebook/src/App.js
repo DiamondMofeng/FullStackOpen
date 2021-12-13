@@ -13,11 +13,13 @@ const App = () => {
   // { name: 'Mary Poppendieck', number: '39-23-6423122', id: 3 }
 
   useEffect(() => {
+    console.log("getting data from jsServer")
     services.getAll()
       .then(data => setPersons(data))
   }, [])
 
   console.log('render', persons.length, 'persons')
+  console.log(persons)
   const [filter, setFilter] = useState('')
 
   return (
@@ -29,6 +31,7 @@ const App = () => {
       <h2>Numbers</h2>
       <Persons persons={persons} filter={filter} setPersons={setPersons} />
     </div>
+
   )
 }
 
@@ -59,19 +62,37 @@ const PersonForm = ({ persons, setPersons }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
+
+
     if (isPresent(newName, persons.map(p => p.name))) {
-      console.log(isPresent(newName, persons.map(p => p.name)))
-      window.alert(newName + " is already added to phonebook")
-      setNewName('')
-      return
+      // console.log(persons.map(p => p.name))
+      // console.log(persons.map(p => p.name).indexOf(newName))
+      const personToChange = persons.find(p => p.name === newName)
+      const idOfToChange = personToChange.id
+      const changedPerson = { ...personToChange, number: newNumber }
+      if (window.confirm(newName + " is already added to phonebook. Would you like to replace the old number?")) {
+        services
+          .update(idOfToChange, changedPerson)
+          .then(r =>
+            setPersons(
+              persons.map(p => (p.id === idOfToChange)
+                ? changedPerson
+                : p)))
+
+        // console.log(r.data)})
+
+        setNewName('')
+        setNewNumber('')
+        return
+      }
+      else return
     }
-    //console.log(newName + " this name is passed")
+
     const newObject = {
       name: newName,
       number: newNumber,
       //id: persons.length
     }
-
     services.create(newObject)
       .then(data => {
         setPersons(persons.concat(data))
@@ -84,8 +105,8 @@ const PersonForm = ({ persons, setPersons }) => {
   }
 
   const isPresent = (ele, arr) => {
-    console.log("arr:", arr)
-    console.log(ele)
+    // console.log("arr:", arr)
+    // console.log(ele)
     if (arr.indexOf(ele) !== -1) return true
     return false
   }
@@ -131,6 +152,9 @@ const DeleteButton = ({ id, name, persons, setPersons }) => {
         // .then(response => console.log(response))
         const toDelete = [...persons]
         setPersons(toDelete.splice(id, 1))
+        console.log(toDelete)
+        console.log(persons)
+
 
       }
     }
