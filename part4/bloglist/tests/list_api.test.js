@@ -76,6 +76,13 @@ test('blogNumbers', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body).toHaveLength(6)
 })
+
+test('blogIsIdDefined', async () => {
+  const response = await api.get('/api/blogs')
+  response.body.forEach(b => {
+    expect(b.id).toBeDefined()
+  });
+})
 afterAll(() => {
   mongoose.connection.close()
 })
