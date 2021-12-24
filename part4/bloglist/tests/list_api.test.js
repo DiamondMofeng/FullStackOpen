@@ -1,5 +1,8 @@
-const listHelper = require('../utils/list_helper')
-const blogs = [
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const app = require('../app')
+const Blog = require('../models/blog')
+const initialBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
     title: "React patterns",
@@ -49,42 +52,31 @@ const blogs = [
     __v: 0
   }
 ]
-describe('total likes', () => {
-  test('when list has only one blog, equals the likes of that', () => {
-    const result = listHelper.totalLikes(blogs)
-    expect(result).toBe(36)
-  })
-})
-describe('highest likes', () => {
-  test('show highest Liked blog', () => {
-    const result = listHelper.favouriteBlog(blogs)
-    expect(result).toEqual({
-      _id: "5a422b3a1b54a676234d17f9",
-      title: "Canonical string reduction",
-      author: "Edsger W. Dijkstra",
-      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-      likes: 12,
-      __v: 0
-    })
-  })
-})
-describe('mostBlogs', () => {
-  test('show highest Liked blog', () => {
-    const result = listHelper.mostBlogs(blogs)
-    expect(result).toEqual({
-      author: "Robert C. Martin",
-      blogs: 3
-    })
-  })
+jest.setTimeout(1000000)
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  let blogObject = new Blog(initialBlogs[0])
+  await blogObject.save()
+  blogObject = new Blog(initialBlogs[1])
+  await blogObject.save()
+  blogObject = new Blog(initialBlogs[2])
+  await blogObject.save()
+  blogObject = new Blog(initialBlogs[3])
+  await blogObject.save()
+  blogObject = new Blog(initialBlogs[4])
+  await blogObject.save()
+  blogObject = new Blog(initialBlogs[5])
+  await blogObject.save()
 })
 
-describe('mostLikes', () => {
-  test('show highest Liked blog', () => {
-    const result = listHelper.mostLikes(blogs)
-    expect(result).toEqual({
-      author: "Edsger W. Dijkstra",
-      likes: 17
-    })
-  })
+
+const api = supertest(app)
+//4.8
+test('blogNumbers', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(6)
+})
+afterAll(() => {
+  mongoose.connection.close()
 })
 
