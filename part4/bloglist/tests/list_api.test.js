@@ -160,6 +160,21 @@ test('blogNoLike', async () => {
   // expect(savedNew.url).toEqual("http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html")
 })
 
+test('blogNoTitleOrUrl', async () => {
+
+
+  let newBlog = {
+    title: "TestBlog",
+    author: "Mofeng",
+    // url: "http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
 afterAll(() => {
   mongoose.connection.close()
 })

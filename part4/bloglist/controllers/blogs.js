@@ -11,7 +11,7 @@ blogsRouter.get('/', (request, response) => {
 
 blogsRouter.post('/', (request, response) => {
   const body = request.body
-  if(body.title===null||body.url===null){
+  if(body.title===undefined||body.url===undefined){
     response.status(400).end()
     return
   }
