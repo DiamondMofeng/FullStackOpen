@@ -135,6 +135,31 @@ test('blogIsSaveSucc', async () => {
   })
 })
 
+test('blogNoLike', async () => {
+
+
+  let newBlog = {
+    title: "TestBlog",
+    author: "Mofeng",
+    url: "http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html",
+    // likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response_new = await api.get('/api/blogs')
+  expect(response_new.body.length - 6).toBe(1)
+  const savedNew = response_new.body[response_new.body.length - 1]
+  expect(savedNew.likes).toEqual(0)
+  // expect(savedNew.title).toEqual("TestBlog")
+  // expect(savedNew.author).toEqual("Mofeng")
+  // expect(savedNew.url).toEqual("http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html")
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
