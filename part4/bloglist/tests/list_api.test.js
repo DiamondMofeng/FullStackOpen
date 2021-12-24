@@ -83,7 +83,60 @@ test('blogIsIdDefined', async () => {
     expect(b.id).toBeDefined()
   });
 })
+
+test('blogIsPostSucc', async () => {
+
+
+  let newBlog = {
+    title: "TestBlog",
+    author: "Mofeng",
+    url: "http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response_new = await api.get('/api/blogs')
+  expect(response_new.body.length - 6).toBe(1)
+  const savedNew = response_new.body[response_new.body.length - 1]
+  expect(savedNew.likes).toEqual(5)
+  expect(savedNew.title).toEqual("TestBlog")
+  expect(savedNew.author).toEqual("Mofeng")
+  expect(savedNew.url).toEqual("http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html")
+})
+
+
+test('blogIsSaveSucc', async () => {
+  // const response_old = await api.get('/api/blogs')
+
+
+  const newBlog = Blog({
+    _id: "5a422bc61b54a676234d6666",
+    title: "TestBlog",
+    author: "Mofeng",
+    url: "http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 5,
+    __v: 0
+  })
+  await newBlog.save()
+
+  const response_new = await api.get('/api/blogs')
+  expect(response_new.body.length - 6).toBe(1)
+  expect(response_new.body[response_new.body.length - 1]).toEqual({
+    id: "5a422bc61b54a676234d6666",
+    title: "TestBlog",
+    author: "Mofeng",
+    url: "http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 5,
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
+
 
