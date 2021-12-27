@@ -2,16 +2,7 @@ const blogsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
-
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-//     return authorization.substring(7)
-//   }
-//   return null
-// }
-
-
+const logger = require('../utils/logger')
 
 
 blogsRouter.get('/', async (request, response) => {
@@ -20,8 +11,11 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
+
+
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
+  let decodedToken
   //check body
   if (body.title === undefined || body.url === undefined) {
     response.status(400).end()
@@ -35,8 +29,17 @@ blogsRouter.post('/', async (request, response) => {
 
 
   //check token
-  // const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!request.token) {
+    return response.status(401).json({ error: 'token missing' })
+  }
+
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET)
+  }
+  catch (error) {
+    next(error)
+    return
+  }
 
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
@@ -52,16 +55,44 @@ blogsRouter.post('/', async (request, response) => {
     })
 })
 
-blogsRouter.delete('/:id', (request, response) => {
-  // console.log("code goes here")
-  const id = request.params.id
 
-  Blog.findByIdAndRemove(id)
-    .then(() => {
-      response.status(204).end()
-    })
+
+blogsRouter.delete('/:id', async (request, response, next) => {
+  const id = request.params.id
+  let decodedToken
+  blogToDelete = await Blog.findById(id)
+  
+  if (!blogToDelete) {
+    return response.status(401).json({ error: 'this blog has been deleted' })
+  }
+
+  //check token
+  if (!request.token) {
+    return response.status(401).json({ error: 'token missing' })
+  }
+
+
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET)
+  }
+  catch (error) {
+    next(error)
+    return
+  }
+
+
+  if (!blogToDelete.user.toString() === decodedToken.id.toString()) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  await Blog.findByIdAndRemove(id)
     .catch(error => next(error))
+  response.status(204).end()
+
 })
+
+
+
 
 blogsRouter.put('/:id', (request, response) => {
   const body = request.body
