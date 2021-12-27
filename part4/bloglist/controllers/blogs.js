@@ -1,15 +1,14 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-blogsRouter.get('/', (request, response) => {
+blogsRouter.get('/', async (request, response) => {
   // console.log("code goes here")
-  Blog.find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
+  const blogs = await Blog.find({}).populate('user')
+  response.json(blogs)
 })
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
   if (body.title === undefined || body.url === undefined) {
     response.status(400).end()
@@ -20,6 +19,9 @@ blogsRouter.post('/', (request, response) => {
     body['likes'] = 0
     // console.log("code goes here")
   }
+
+  const randomUser = await User.findOne()
+  body.user = randomUser._id
 
   const blog = new Blog(body)
 
@@ -59,7 +61,7 @@ blogsRouter.put('/:id', (request, response) => {
     Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
       .then(result => {
         if (result) {
-          console.log(result)
+          // console.log(result)
           response.status(200).json(result)
         } else {
           response.status(404).json({ error: `Fail to locate this blog on server, it might have been removed`, })
@@ -68,7 +70,7 @@ blogsRouter.put('/:id', (request, response) => {
 
       })
       .catch(err => {
-        console.log(err)
+        // console.log(err)
         next(err)
       })
   }
