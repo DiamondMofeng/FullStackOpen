@@ -2,6 +2,7 @@ const blogsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const userExtractor = require('../utils/middleware').userExtractor
 const logger = require('../utils/logger')
 
 
@@ -57,31 +58,16 @@ blogsRouter.post('/', async (request, response) => {
 
 
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
   const id = request.params.id
-  let decodedToken
+  // let decodedToken
   blogToDelete = await Blog.findById(id)
-  
+
   if (!blogToDelete) {
     return response.status(401).json({ error: 'this blog has been deleted' })
   }
 
-  //check token
-  if (!request.token) {
-    return response.status(401).json({ error: 'token missing' })
-  }
-
-
-  try {
-    decodedToken = jwt.verify(request.token, process.env.SECRET)
-  }
-  catch (error) {
-    next(error)
-    return
-  }
-
-
-  if (!blogToDelete.user.toString() === decodedToken.id.toString()) {
+  if (!blogToDelete.user.toString() === request.user.toString()) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
 
@@ -92,7 +78,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 })
 
 
-
+//PUT have not add token valid check
 
 blogsRouter.put('/:id', (request, response) => {
   const body = request.body
