@@ -14,7 +14,7 @@ blogsRouter.get('/', async (request, response) => {
 
 
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
   let decodedToken
   //check body
@@ -64,7 +64,7 @@ blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
   blogToDelete = await Blog.findById(id)
 
   if (!blogToDelete) {
-    return response.status(401).json({ error: 'this blog has been deleted' })
+    return response.status(400).json({ error: 'this blog has been deleted' })
   }
 
   if (!blogToDelete.user.toString() === request.user.toString()) {

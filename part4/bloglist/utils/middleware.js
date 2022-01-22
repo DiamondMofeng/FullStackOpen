@@ -23,7 +23,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: error.message })
   }
   else if (error.name === 'JsonWebTokenError' && error.message === 'invalid token') {
-    return response.status(400).json({ error: 'token invalid' })
+    return response.status(401).json({ error: 'token invalid' })
   }
   next(error)
 }
@@ -55,6 +55,7 @@ const userExtractor = (request, response, next) => {
     decodedToken = jwt.verify(token, process.env.SECRET)
   }
   catch (error) {
+    // console.log("keyErrpr")
     next(error)
     return
   }
