@@ -96,6 +96,7 @@ test('blogIsPostSucc', async () => {
 
   await api
     .post('/api/blogs')
+    .set({"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vZmVuZyIsImlkIjoiNjFjNmJhMTE3ZGRjNzAwMDA2OTBiN2QzIiwiaWF0IjoxNjQwNjA4NzI2fQ.2I0rNdSWM7PV90-6SlwQpbffj9DqEYUkiW-EzfAtwTA"})
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -148,6 +149,7 @@ test('blogNoLike', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
+    .set({"Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vZmVuZyIsImlkIjoiNjFjNmJhMTE3ZGRjNzAwMDA2OTBiN2QzIiwiaWF0IjoxNjQwNjA4NzI2fQ.2I0rNdSWM7PV90-6SlwQpbffj9DqEYUkiW-EzfAtwTA"})
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
@@ -179,4 +181,28 @@ afterAll(() => {
   mongoose.connection.close()
 })
 
+test('blogPostWithNoAuth', async () => {
+
+
+  let newBlog = {
+    title: "TestBlog",
+    author: "Mofeng",
+    url: "http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    // .expect('Content-Type', /application\/json/)
+
+  // const response_new = await api.get('/api/blogs')
+  // expect(response_new.body.length - 6).toBe(1)
+  // const savedNew = response_new.body[response_new.body.length - 1]
+  // expect(savedNew.likes).toEqual(5)
+  // expect(savedNew.title).toEqual("TestBlog")
+  // expect(savedNew.author).toEqual("Mofeng")
+  // expect(savedNew.url).toEqual("http://blog.mofengfeng.com/uncle-bob/2016/05/01/TypeWars.html")
+})
 
