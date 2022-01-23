@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import LoginInfo from './components/LoginInfo'
 import blogService from './services/blogs'
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
+ 
 
   //get saved login info
   useEffect(() => {
@@ -24,7 +19,7 @@ const App = () => {
       setUser(loggedUser)
       blogService.setToken(loggedUser.token)
     }
-  },[])
+  }, [])
 
 
 
@@ -37,10 +32,7 @@ const App = () => {
           user={user} setUser={setUser} />
       </div>
       <div>
-        <h2>blogs</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <BlogList />
       </div>
     </div>
   )
