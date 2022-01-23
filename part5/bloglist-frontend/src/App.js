@@ -9,7 +9,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
- 
+
 
   //get saved login info
   useEffect(() => {
@@ -22,20 +22,31 @@ const App = () => {
   }, [])
 
 
-
-  return (
-    <div>
+  if (user !== null) {
+    return (
+      <div>
+        <div>
+          <LoginInfo
+            username={username} setUsername={setUsername}
+            password={password} setPassword={setPassword}
+            user={user} setUser={setUser} />
+        </div>
+        <div>
+          <BlogList />
+        </div>
+      </div>
+    )
+  }
+  else {
+    return (
       <div>
         <LoginInfo
           username={username} setUsername={setUsername}
           password={password} setPassword={setPassword}
           user={user} setUser={setUser} />
       </div>
-      <div>
-        <BlogList />
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
 
