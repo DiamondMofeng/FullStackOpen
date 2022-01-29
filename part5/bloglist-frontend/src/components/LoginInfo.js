@@ -1,11 +1,16 @@
-import React from "react"
+import React,{useState} from "react"
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 
 
-const LoginInfo = ({ username, setUsername, password, setPassword, user, setUser,
+const LoginInfo = ({  user, setUser,
   setNotice }) => {
+
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+  
+
 
   const handleLogin = async (event) => {
     event.preventDefault()

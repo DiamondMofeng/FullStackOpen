@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import Blog from "./Blog";
+
+import Blogs from "./Blogs";
+// import Blog from './Blog'
 import BlogAddForm from './BlogAddForm.js'
 
 import Togglable from './auxi/Togglable'
@@ -26,6 +28,10 @@ const BlogList = ({ setNotice }) => {
   }, [])
 
 
+  
+
+
+
 
   return (
     <div>
@@ -34,12 +40,14 @@ const BlogList = ({ setNotice }) => {
       <div>
         <h2>blogs</h2>
         <Togglable buttonLable='add a new blog' ref={blogAddRef}>
-          <BlogAddForm blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} blogAddRef={blogAddRef}/>
+          <BlogAddForm blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} blogAddRef={blogAddRef} />
         </Togglable>
 
-        {blogs.map(blog =>
+        <Blogs blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} />
+        {/* {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
-        )}
+        )} */}
+
       </div>
     </div>
   )

@@ -8,8 +8,6 @@ import blogService from './services/blogs'
 
 const App = () => {
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
 
   // includes{notice.msg,notice.type}
   const [notice, setNotice] = useState({})
@@ -31,8 +29,6 @@ const App = () => {
       <div>
         <Notification notice={notice} setNotice={setNotice} />
         <LoginInfo
-          username={username} setUsername={setUsername}
-          password={password} setPassword={setPassword}
           user={user} setUser={setUser}
 
           setNotice={setNotice} />
@@ -46,8 +42,6 @@ const App = () => {
       <div>
         <Notification notice={notice} />
         <LoginInfo
-          username={username} setUsername={setUsername}
-          password={password} setPassword={setPassword}
           user={user} setUser={setUser}
 
           setNotice={setNotice} />

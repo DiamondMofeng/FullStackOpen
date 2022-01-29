@@ -1,13 +1,16 @@
 import React, { useState, useImperativeHandle } from "react";
 
 
-const Togglable = React.forwardRef(({ buttonLable, children }, ref) => {
+const Togglable = React.forwardRef(({ buttonLable, children, inline }, ref) => {
   const [visible, setVisible] = useState(false)
 
   //style
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
+
+
+  //func
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -18,18 +21,17 @@ const Togglable = React.forwardRef(({ buttonLable, children }, ref) => {
   })
 
   return (
-    <div>
-      <div style={hideWhenVisible}>
+    <>
+      <div style={hideWhenVisible} display='inline'>
         <button onClick={toggleVisibility}>{buttonLable}</button>
       </div>
       <div style={showWhenVisible}>
         {children}
         <button onClick={toggleVisibility}>hide</button>
       </div>
-    </div>
+    </>
   )
-}
-)
+})
 
 
 export default Togglable
