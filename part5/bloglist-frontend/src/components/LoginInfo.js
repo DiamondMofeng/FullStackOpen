@@ -9,7 +9,6 @@ const LoginInfo = ({  user, setUser,
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-  
 
 
   const handleLogin = async (event) => {
