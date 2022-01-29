@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginInfo from './components/LoginInfo'
+import Notification from './components/Notification'
+
 import blogService from './services/blogs'
 
 
@@ -9,6 +11,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  // includes{notice.msg,notice.type}
+  const [notice, setNotice] = useState({})
 
 
   //get saved login info
@@ -25,25 +29,28 @@ const App = () => {
   if (user !== null) {
     return (
       <div>
-        <div>
-          <LoginInfo
-            username={username} setUsername={setUsername}
-            password={password} setPassword={setPassword}
-            user={user} setUser={setUser} />
-        </div>
-        <div>
-          <BlogList />
-        </div>
+        <Notification notice={notice} setNotice={setNotice} />
+        <LoginInfo
+          username={username} setUsername={setUsername}
+          password={password} setPassword={setPassword}
+          user={user} setUser={setUser}
+
+          setNotice={setNotice} />
+        <BlogList setNotice={setNotice} />
+
       </div>
     )
   }
   else {
     return (
       <div>
+        <Notification notice={notice} />
         <LoginInfo
           username={username} setUsername={setUsername}
           password={password} setPassword={setPassword}
-          user={user} setUser={setUser} />
+          user={user} setUser={setUser}
+
+          setNotice={setNotice} />
       </div>
     )
   }

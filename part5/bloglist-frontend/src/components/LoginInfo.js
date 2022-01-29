@@ -4,7 +4,8 @@ import blogService from '../services/blogs'
 
 
 
-const LoginInfo = ({ username, setUsername, password, setPassword, user, setUser }) => {
+const LoginInfo = ({ username, setUsername, password, setPassword, user, setUser,
+  setNotice }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -24,17 +25,22 @@ const LoginInfo = ({ username, setUsername, password, setPassword, user, setUser
       setUser(user)
       blogService.setToken(user.token)
       //after login
+      setNotice({ msg: 'You have successfully login', type: '' })
+      setTimeout(() => {
+        setNotice(null)
+      }, 5000)
+
       setUsername('')
       setPassword('')
 
 
     }
     catch {
-      // setErrorMessage('Wrong credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 5000)
-      console.log('fail to login!')
+      setNotice({ msg: 'Invalid username or password', type: 'error' })
+      setTimeout(() => {
+        setNotice(null)
+      }, 5000)
+      // console.log('fail to login!')
     }
   }
 
