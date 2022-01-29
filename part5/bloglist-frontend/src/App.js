@@ -32,7 +32,7 @@ const App = () => {
           user={user} setUser={setUser}
 
           setNotice={setNotice} />
-        <BlogList setNotice={setNotice} />
+        <BlogList setNotice={setNotice} user={user}/>
 
       </div>
     )

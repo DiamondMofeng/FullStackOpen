@@ -14,7 +14,7 @@ import blogService from '../services/blogs'
 
 
 
-const BlogList = ({ setNotice }) => {
+const BlogList = ({ setNotice, user }) => {
 
 
   const [blogs, setBlogs] = useState([])
@@ -28,7 +28,7 @@ const BlogList = ({ setNotice }) => {
   }, [])
 
 
-  
+
 
 
 
@@ -43,10 +43,7 @@ const BlogList = ({ setNotice }) => {
           <BlogAddForm blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} blogAddRef={blogAddRef} />
         </Togglable>
 
-        <Blogs blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} />
-        {/* {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )} */}
+        <Blogs blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} user={user} />
 
       </div>
     </div>

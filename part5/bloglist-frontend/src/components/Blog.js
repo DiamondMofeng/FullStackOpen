@@ -2,35 +2,14 @@ import React from 'react'
 
 import Togglable from './auxi/Togglable'
 
-import blogService from '../services/blogs'
+// import blogService from '../services/blogs'
 
-const Blog = ({ blog, setNotice, addLike }) => {
+const Blog = ({ blog, setNotice, handleAddLike, handleDelete, user }) => {
+  const isBlogAdder = user.username === blog.user.username
+  // console.log(isBlogAdder)
+  // console.log( user.username, blog.user.username)
 
-  // console.log(blog)
-
-  // const handleLikeButton = async () => {
-  //   try {
-  //     const newBlog = { ...blog, likes: blog.likes + 1, id: null }
-  //     console.log(newBlog)
-  //     const response = await blogService.update(blog.id, newBlog)
-  //     console.log(response)
-  //     //after succ
-  //     setNotice({ msg: `${blog.title} is liked`, type: '' })
-  //     setTimeout(() => {
-  //       setNotice(null)
-  //     }, 5000)
-  //   }
-
-  //   catch {
-  //     console.log('failed')
-  //     setNotice({ msg: `failed to like ${blog.title} `, type: 'error' })
-  //     setTimeout(() => {
-  //       setNotice(null)
-  //     }, 5000)
-  //   }
-  // }
-
-
+  //style
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -47,11 +26,16 @@ const Blog = ({ blog, setNotice, addLike }) => {
       {blog.title}
       <Togglable buttonLable='view' >
         <p> URL: {blog.url}</p>
-        <p>
-          likes: {blog.likes}
-          <button onClick={addLike}>like</button>
+        <p>likes: {blog.likes}
+          <button onClick={handleAddLike}>like</button>
         </p>
         <p> Author: {blog.author}</p>
+        {
+          isBlogAdder
+            ? <button onClick={handleDelete}>delete</button>
+            : null
+        }
+
 
       </Togglable>
     </div>
