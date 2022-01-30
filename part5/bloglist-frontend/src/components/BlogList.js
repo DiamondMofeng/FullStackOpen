@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react"
 
-import Blogs from "./Blogs";
+import Blogs from "./Blogs"
 // import Blog from './Blog'
 import BlogAddForm from './BlogAddForm.js'
 
