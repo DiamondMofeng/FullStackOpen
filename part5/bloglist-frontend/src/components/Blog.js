@@ -4,10 +4,10 @@ import Togglable from './auxi/Togglable'
 
 // import blogService from '../services/blogs'
 
-const Blog = ({ blog, setNotice, handleAddLike, handleDelete, user }) => {
+const Blog = ({ blog, handleAddLike, handleDelete, user }) => {
   const isBlogAdder = user.username === blog.user.username
   // console.log(isBlogAdder)
-  // console.log( user.username, blog.user.username)
+  // console.log( user.username, blFog.user.username)
 
   //style
   const blogStyle = {
@@ -15,8 +15,8 @@ const Blog = ({ blog, setNotice, handleAddLike, handleDelete, user }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5,
-    // display: 'inline', 
+    marginBottom: 5
+    // display: 'inline',
   }
   // const inlineStyle = {
   //   display: 'inline'
