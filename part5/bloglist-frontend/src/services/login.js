@@ -8,6 +8,6 @@ const login = async (loginInfo) => {
   return response.data
 }
 
-const exp = {login}
+const exp = { login }
 
 export default exp

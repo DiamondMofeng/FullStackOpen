@@ -1,14 +1,14 @@
-import React,{useState} from "react"
+import React, { useState } from "react"
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 
 
-const LoginInfo = ({  user, setUser,
+const LoginInfo = ({ user, setUser,
   setNotice }) => {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
 
   const handleLogin = async (event) => {
@@ -39,7 +39,7 @@ const LoginInfo = ({  user, setUser,
 
 
     }
-    catch {
+    catch (e) {
       setNotice({ msg: 'Invalid username or password', type: 'error' })
       setTimeout(() => {
         setNotice(null)

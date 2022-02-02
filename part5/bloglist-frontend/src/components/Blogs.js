@@ -1,11 +1,11 @@
-import React from "react";
+import React from "react"
 
 import Blog from './Blog'
 
 import blogService from '../services/blogs'
 
 
-//Blogs component controls how Blogs show 
+//Blogs component controls how Blogs show
 
 //Blogs compt
 const Blogs = ({ blogs, setBlogs, setNotice, user }) => {
@@ -33,7 +33,7 @@ const Blogs = ({ blogs, setBlogs, setNotice, user }) => {
         setBlogs(blogs.map(_blog => _blog.id === blog.id ? responseBlog : _blog))
       }
 
-      catch {
+      catch (e) {
         console.log('failed to like')
         setNotice({ msg: `failed to like ${blog.title} `, type: 'error' })
         setTimeout(() => {
@@ -45,23 +45,25 @@ const Blogs = ({ blogs, setBlogs, setNotice, user }) => {
 
   const deleteBlog = (blog) => {
     return async () => {
-      try {
-        const response = await blogService.remove(blog.id)
-        console.log(response)
-        //after succ
-        setNotice({ msg: `deleted ${blog.title} `, type: 'error' })
-        setTimeout(() => {
-          setNotice(null)
-        }, 5000)
+      if (window.confirm(`are you sure to delete ${blog.title} ?`)) {
+        try {
+          const response = await blogService.remove(blog.id)
+          console.log(response)
+          //after succ
+          setNotice({ msg: `deleted ${blog.title} `, type: 'error' })
+          setTimeout(() => {
+            setNotice(null)
+          }, 5000)
 
-        ////update blogs
-        setBlogs(blogs.filter(b => b.id !== blog.id))
-      }
-      catch {
-        setNotice({ msg: `failed to delete ${blog.title} `, type: 'error' })
-        setTimeout(() => {
-          setNotice(null)
-        }, 5000)
+          ////update blogs
+          setBlogs(blogs.filter(b => b.id !== blog.id))
+        }
+        catch (e) {
+          setNotice({ msg: `failed to delete ${blog.title} `, type: 'error' })
+          setTimeout(() => {
+            setNotice(null)
+          }, 5000)
+        }
       }
     }
   }
@@ -87,4 +89,4 @@ const Blogs = ({ blogs, setBlogs, setNotice, user }) => {
 
 
 
-export default Blogs;
+export default Blogs
