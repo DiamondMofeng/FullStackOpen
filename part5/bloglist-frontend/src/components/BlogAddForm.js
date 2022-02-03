@@ -40,7 +40,7 @@ const BlogAddForm = ({ blogs, setBlogs, setNotice, blogAddRef }) => {
 
       blogAddRef.current.toggleVisibility()
     }
-    catch {
+    catch (e) {
       console.log('create failed')
       setNotice({ msg: `failed to create new blog`, type: 'error' })
       setTimeout(() => {
