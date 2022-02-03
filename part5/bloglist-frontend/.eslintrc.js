@@ -45,7 +45,12 @@ module.exports = {
       "error", { "before": true, "after": true }
     ],
     "no-console": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "no-use-before-define": 2,//变量声明前不允许使用
+    "no-unused-vars": [1, {
+      "vars": "all",
+      "args": "all"
+    }], //不能有声明后未被使用的变量或参数
   },
   "settings": {
     "react": {

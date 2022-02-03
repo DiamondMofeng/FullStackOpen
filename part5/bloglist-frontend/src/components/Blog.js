@@ -22,14 +22,14 @@ const Blog = ({ blog, handleAddLike, handleDelete, user }) => {
   //   display: 'inline'
   // }
   return (
-    <div style={blogStyle}>
+    <li style={blogStyle} className='blog'>
       {blog.title}
       <Togglable buttonLable='view' >
-        <p> URL: {blog.url}</p>
-        <p>likes: {blog.likes}
+        <p data-testid='URL'> URL: {blog.url}</p>
+        <p data-testid='LIKES'> likes: {blog.likes}
           <button onClick={handleAddLike}>like</button>
         </p>
-        <p> Author: {blog.author}</p>
+        <p data-testid='AUTHOR'> Author: {blog.author}</p>
         {
           isBlogAdder
             ? <button onClick={handleDelete}>delete</button>
@@ -38,7 +38,7 @@ const Blog = ({ blog, handleAddLike, handleDelete, user }) => {
 
 
       </Togglable>
-    </div>
+    </li>
   )
 }
 export default Blog
