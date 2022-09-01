@@ -24,6 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+
 Cypress.Commands.add('login', ({ username, password }) => {
   cy.request('POST', 'http://localhost:3003/api/login', {
     username, password
@@ -40,4 +41,17 @@ Cypress.Commands.add('addABlog', (blog) => {
   cy.get('#author').type(blog.author)
   cy.get('#url').type(blog.url)
   cy.get('#create-blog-button').click()
+})
+
+Cypress.Commands.add('likeABlog', (blogTitle, likeCount, wait = 1000) => {
+
+  cy.get(`.blog:contains(${blogTitle})`).within(() => {
+    cy.contains('view').click() //展开view
+    for (let i = 0; i < likeCount; i++) {
+      cy.get('#like-button').click()
+      cy.wait(wait)
+    }
+    cy.contains('hide').click()
+  })
+
 })

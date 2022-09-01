@@ -97,6 +97,49 @@ describe('Blog app', function () {
 
     })
 
+    //* ////////////5.22
+    describe('When have multi blogs', function () {
+
+      const mockBlogs = [
+        {
+          title: 'theBlogWithMostLikes',
+          url: 'theBlogWithMostLikesUrl',
+          author: 'theBlogWithMostLikesAuthor',
+        },
+        {
+          title: 'theBlogWithLeastLikes',
+          url: 'theBlogWithLeastLikesUrl',
+          author: 'theBlogWithLeastLikesAuthor',
+        },
+        {
+          title: 'theBlogWith2Likes',
+          url: 'theBlogWith2LikesUrl',
+          author: 'theBlogWith2LikesAuthor',
+        }
+      ]
+      beforeEach(function () {
+        mockBlogs.forEach(blog => cy.addABlog(blog))
+        mockBlogs.forEach(blog => cy.contains(blog.title))  //make sure all blogs are added
+      })
+      it('blogs is sorted according to likes', function () {
+
+        cy.likeABlog(mockBlogs[0].title, 5)
+        cy.likeABlog(mockBlogs[1].title, 1)
+        cy.likeABlog(mockBlogs[2].title, 2)
+
+        cy.get('.blog').eq(0).should('contain', mockBlogs[0].title)
+        cy.get('.blog').eq(1).should('contain', mockBlogs[2].title)
+        cy.get('.blog').eq(2).should('contain', mockBlogs[1].title)
+
+      })
+
+
+    })
+
+
+
+
+
 
   })
 
