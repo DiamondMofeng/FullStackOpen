@@ -3,10 +3,11 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
+import BlogAddForm from './BlogAddForm'
 
 
 
-test('default renders content', () => {
+test('5.13 default renders content', () => {
 
 
 
@@ -34,41 +35,9 @@ test('default renders content', () => {
 
 })
 
-test('show URL and Author after clicked VIEW', async () => {
+test('5.14 show URL and Author after clicked VIEW', async () => {
 
-  const mockHandler = jest.fn()
-
-  const blog = {
-    url: "testUrl",
-    title: "testTitle",
-    author: "testAuthor",
-    likes: 1,
-    user: {
-      username: 'Mofeng'
-    }
-  }
-
-  const user = {
-    username: "Mofeng"
-  }
-
-
-  render(
-    <Blog blog={blog} user={user} />
-  )
-
-  const button = screen.getByText('view')
-  userEvent.click(button)
-
-  // expect(mockHandler.mock.calls).toHaveLength(1)
-  expect(screen.getByText('testTitle')).toBeVisible()
-  expect(screen.getByTestId('URL')).toBeVisible()
-  expect(screen.getByTestId('AUTHOR')).toBeVisible()
-})
-
-test('show URL and Author after clicked VIEW', async () => {
-
-  const mockHandler = jest.fn()
+  // const mockHandler = jest.fn()
 
   const blog = {
     url: "testUrl",
@@ -98,11 +67,10 @@ test('show URL and Author after clicked VIEW', async () => {
   expect(screen.getByTestId('AUTHOR')).toBeVisible()
 })
 
-test('like twice', () => {
+
+test('5.15 like twice', () => {
 
   const mockHandler = jest.fn()
-
-  
 
   const blog = {
     title: "321",
@@ -129,10 +97,62 @@ test('like twice', () => {
   const likeButton = screen.getByText('like')
   userEvent.dblClick(likeButton)
 
-  
+
   expect(mockHandler.mock.calls).toHaveLength(2)
 
 
+})
 
+
+/**
+ * this test seems to be useless
+ */
+test('5.16 the form adding new blog', async () => {
+
+
+  const mockBlog = {
+    title: "tit",
+    author: "aut",
+    url: "mockurl",
+  }
+
+  render(
+    <BlogAddForm />
+  )
+
+
+  const inputs = screen.getAllByRole('textbox')
+  const titleInput = inputs.find(input => input.name === 'Title')
+  const authorInput = inputs.find(input => input.name === 'Author')
+  const urlInput = inputs.find(input => input.name === 'Url')
+  const submitButton = screen.getByText('create')
+
+  userEvent.type(titleInput, mockBlog.title)
+  userEvent.type(authorInput, mockBlog.author)
+  userEvent.type(urlInput, mockBlog.url)
+
+  let newBlog
+
+  const form = document.querySelector('form')
+  const mockSubmitHandler = jest.fn(event => {
+    event.preventDefault()
+
+    const _newBlog = {
+      title: titleInput.value,
+      author: authorInput.value,
+      url: urlInput.value,
+    }
+
+    newBlog = _newBlog
+  })
+  form.onsubmit = mockSubmitHandler
+
+  userEvent.click(submitButton)
+
+  screen.debug()
+
+  expect(JSON.stringify(newBlog)).toBe(
+    JSON.stringify(mockBlog)
+  )
 
 })
