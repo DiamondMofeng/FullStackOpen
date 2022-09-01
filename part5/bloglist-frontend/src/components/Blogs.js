@@ -80,7 +80,15 @@ const Blogs = ({ blogs, setBlogs, setNotice, user }) => {
     <div>
       {
         blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} setNotice={setNotice} handleAddLike={likeBlog(blog)} handleDelete={deleteBlog(blog)} user={user} />
+          <Blog
+            className="blog"
+            key={blog.id}
+            blog={blog}
+            setNotice={setNotice}
+            handleAddLike={likeBlog(blog)}
+            handleDelete={deleteBlog(blog)}
+            user={user}
+          />
         )
       }
     </div>

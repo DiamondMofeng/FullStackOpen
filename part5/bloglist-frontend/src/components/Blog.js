@@ -26,13 +26,13 @@ const Blog = ({ blog, handleAddLike, handleDelete, user }) => {
       {blog.title}
       <Togglable buttonLable='view' >
         <p data-testid='URL'> URL: {blog.url}</p>
-        <p data-testid='LIKES'> likes: {blog.likes}
-          <button onClick={handleAddLike}>like</button>
+        <p id='likes' data-testid='LIKES'> likes: {blog.likes}
+          <button id='like-button' onClick={handleAddLike}>like</button>
         </p>
         <p data-testid='AUTHOR'> Author: {blog.author}</p>
         {
           isBlogAdder
-            ? <button onClick={handleDelete}>delete</button>
+            ? <button id='delete-blog-button' onClick={handleDelete}>delete</button>
             : null
         }
 
