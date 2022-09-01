@@ -39,7 +39,7 @@ const BlogList = ({ setNotice, user }) => {
 
       <div>
         <h2>blogs</h2>
-        <Togglable buttonLable='add a new blog' ref={blogAddRef}>
+        <Togglable buttonLable='add a new blog' buttonID='toggle-add-blog' ref={blogAddRef}>
           <BlogAddForm blogs={blogs} setBlogs={setBlogs} setNotice={setNotice} blogAddRef={blogAddRef} />
         </Togglable>
 
