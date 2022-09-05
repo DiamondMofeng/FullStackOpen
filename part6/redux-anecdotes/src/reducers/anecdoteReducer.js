@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { setNotification } from "./notificationReducer"
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -25,6 +26,7 @@ const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState,
   reducers: {
+
     voteAnecdote: (state, action) => {
       const id = action.payload
       const anecdote = state.find(a => a.id === id)
@@ -32,12 +34,17 @@ const anecdoteSlice = createSlice({
         return
       }
       anecdote.votes += 1
+
+      setNotification(`you voted '${anecdote.content}'`)
     },
+
     addAnecdote: (state, action) => {
       const content = action.payload
       const newAnecdote = asObject(content)
       state.push(newAnecdote)
-    }
+      setNotification(`you have added a new anecdote '${content}'`)
+    },
+
   }
 })
 
