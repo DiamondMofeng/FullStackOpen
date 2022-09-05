@@ -6,6 +6,9 @@ import { removeNotification, setNotification } from "../reducers/notificationRed
 const AnecdoteList = () => {
 
   const anecdotes = useSelector(state => state.anecdotes)
+  const filterValue = useSelector(state => state.filter)
+
+
   const dispatch = useDispatch()
   const vote = (id) => {
     console.log('vote', id)
@@ -21,6 +24,7 @@ const AnecdoteList = () => {
       {
         anecdotes
           .slice()        //TODO I have to sort a copy instead of the origin array. Any Better Way?
+          .filter(anecdote => anecdote.content.toLowerCase().includes(filterValue.toLowerCase()))
           .sort((a, b) => b.votes - a.votes)
           .map(anecdote =>
             <div key={anecdote.id}>
