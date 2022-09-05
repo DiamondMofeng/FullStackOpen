@@ -31,13 +31,23 @@ export const { _setNotification, removeNotification } = notificationSlice.action
 
 //* Below are functions that return async reducers
 
+let timeout //TODO should use a throttle function and include "timeout" variable in a closure
+
 export const setNotification = (content, during) => {
 
   return async dispatch => {
     dispatch(_setNotification(content))
-    setTimeout(() => {
+    console.log("start", new Date())
+
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+
+    timeout = setTimeout(() => {
       dispatch(removeNotification())
+      console.log("end", new Date())
     }, during * 1000)
+
   }
 
 }
