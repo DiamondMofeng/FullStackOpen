@@ -12,7 +12,7 @@
 ## [c] Communicating with server in a redux application
 
 - [x] 6.13.-6.14
-- [ ] 6.15.-6.18
+- [x] 6.15.-6.18
 
 ## [d] connet
 
